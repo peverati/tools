@@ -1,0 +1,112 @@
+#INFO: **** input file is /home/jluis/src/git/future/ortho/test/h2o.py ****
+#!/usr/bin/env python
+
+from pyscf import gto, scf
+from pyscf.tools import wfn_format
+
+name = 'h2o'
+
+mol = gto.Mole()
+mol.atom = '''
+ O  0.0000  0.0000  0.1173
+ H  0.0000  0.7572 -0.4692
+ H  0.0000 -0.7572 -0.4692
+'''
+mol.basis = 'aug-cc-pv5z'
+mol.verbose = 4
+mol.spin = 0
+mol.symmetry = 1
+mol.charge = 0
+mol.build()
+
+mf = scf.RHF(mol)
+mf.kernel()
+
+wfn_file = name + '.wfn'
+nmo = mol.nelectron//2
+coef = mf.mo_coeff[:,:nmo]
+occ = mf.mo_occ[:nmo]
+ene = mf.mo_energy[:nmo]
+with open(wfn_file, 'w') as f2:
+    wfn_format.write_mo(f2, mol, coef, mo_occ=occ, mo_energy=ene)
+
+#INFO: ******************** input file end ********************
+
+
+System: ('Linux', 'cromo', '4.9.0-0.bpo.3-amd64', '#1 SMP Debian 4.9.30-2+deb9u5~bpo8+1 (2017-09-28)', 'x86_64', '')  Threads 4
+Python 2.7.14 (default, Apr 10 2018, 19:21:27) 
+[GCC 7.3.0]
+numpy 1.15.4  scipy 1.2.0
+Date: Sun Apr 21 23:09:40 2019
+PySCF version 1.6.1
+PySCF path  /home/jluis/src/pyscf/dev/pyscf
+GIT ORIG_HEAD ed0669f78f5636a4bf8e5ecd86890f038b3da45c
+GIT HEAD      ref: refs/heads/dev
+GIT dev branch  470abb0313323f02e64068f615438a6b8abe876d
+
+[ENV] PYSCF_MAX_MEMORY 24000
+[ENV] PYSCF_TMPDIR /scratch-ssd/jluis
+[CONFIG] conf_file None
+[INPUT] verbose = 4
+[INPUT] num. atoms = 3
+[INPUT] num. electrons = 10
+[INPUT] charge = 0
+[INPUT] spin (= nelec alpha-beta = 2S) = 0
+[INPUT] symmetry 1 subgroup None
+[INPUT] Mole.unit = angstrom
+[INPUT]  1 O      0.000000000000   0.000000000000   0.117300000000 AA    0.000000000000   0.000000000000   0.221664874411 Bohr
+[INPUT]  2 H      0.757200000000   0.000000000000  -0.469200000000 AA    1.430900621521   0.000000000000  -0.886659497646 Bohr
+[INPUT]  3 H     -0.757200000000   0.000000000000  -0.469200000000 AA   -1.430900621521   0.000000000000  -0.886659497646 Bohr
+
+nuclear repulsion = 9.1895337629349
+point group symmetry = C2v
+num. orbitals of irrep A1 = 96
+num. orbitals of irrep A2 = 49
+num. orbitals of irrep B1 = 81
+num. orbitals of irrep B2 = 61
+number of shells = 66
+number of NR pGTOs = 310
+number of NR cGTOs = 287
+basis = aug-cc-pv5z
+ecp = {}
+CPU time:         0.34
+
+
+******** <class 'pyscf.scf.hf_symm.SymAdaptedRHF'> ********
+method = SymAdaptedRHF-RHF
+initial guess = minao
+damping factor = 0
+level shift factor = 0
+DIIS = <class 'pyscf.scf.diis.CDIIS'>
+DIIS start cycle = 1
+DIIS space = 8
+SCF tol = 1e-09
+SCF gradient tol = None
+max. SCF cycles = 50
+direct_scf = True
+direct_scf_tol = 1e-13
+chkfile to save SCF result = /scratch-ssd/jluis/tmpWdpEAU
+max_memory 24000 MB (current use 75 MB)
+Freeze 0 electrons in irreps []
+    10 free electrons in irreps A1 A2 B1 B2
+Set gradient conv threshold to 3.16228e-05
+init E= -75.887929004769
+HOMO (B2) = -0.479669263061461  LUMO (A1) = 0.0120860070548462
+cycle= 1 E= -76.0309292059266  delta_E= -0.143  |g|= 0.442  |ddm|= 0.648
+HOMO (B2) = -0.435196403063188  LUMO (A1) = 0.0217794546794471
+cycle= 2 E= -76.0565542865333  delta_E= -0.0256  |g|= 0.264  |ddm|= 0.205
+HOMO (B2) = -0.519430100162248  LUMO (A1) = 0.0228283337303973
+cycle= 3 E= -76.0670608451494  delta_E= -0.0105  |g|= 0.0319  |ddm|= 0.0801
+HOMO (B2) = -0.509379104337351  LUMO (A1) = 0.0235863205922602
+cycle= 4 E= -76.067261443345  delta_E= -0.000201  |g|= 0.006  |ddm|= 0.0115
+HOMO (B2) = -0.510204980339982  LUMO (A1) = 0.0236002697042089
+cycle= 5 E= -76.0672759884158  delta_E= -1.45e-05  |g|= 0.0011  |ddm|= 0.00408
+HOMO (B2) = -0.51042117036577  LUMO (A1) = 0.0235946645046108
+cycle= 6 E= -76.0672767435377  delta_E= -7.55e-07  |g|= 0.000203  |ddm|= 0.00103
+HOMO (B2) = -0.5104827999603  LUMO (A1) = 0.0235948348579322
+cycle= 7 E= -76.0672767720736  delta_E= -2.85e-08  |g|= 3.3e-05  |ddm|= 0.000232
+HOMO (B2) = -0.510485218312602  LUMO (A1) = 0.0235951458703548
+cycle= 8 E= -76.0672767726933  delta_E= -6.2e-10  |g|= 3.46e-06  |ddm|= 3.55e-05
+HOMO (B2) = -0.510485268448802  LUMO (A1) = 0.0235952200484361
+Extra cycle  E= -76.0672767726991  delta_E= -5.83e-12  |g|= 1.21e-06  |ddm|= 5.56e-06
+converged SCF energy = -76.0672767726991

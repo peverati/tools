@@ -1,0 +1,6 @@
+integ
+*.o
+*.so
+*.pyc
+tmp/
+*.mod

@@ -1,0 +1,5 @@
+*.o
+surf
+*.so
+tmp/
+*.mod

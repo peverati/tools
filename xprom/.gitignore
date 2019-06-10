@@ -1,0 +1,9 @@
+*.o
+*.mod
+*.a
+*.txt
+xprom
+xprom-mp2
+tmp/
+data-from-promolden
+gmon.out

@@ -1,0 +1,76 @@
+
+!.....Labelling of Cartesian GTOs according to PROMOLDEN.
+!     itip=1    's   ' 1  in MOLDEN 
+!     itip=2    'x   ' 2  in MOLDEN 
+!     itip=3    'y   ' 3  in MOLDEN 
+!     itip=4    'z   ' 4  in MOLDEN 
+!     itip=5    'xx  ' 5  in MOLDEN 
+!     itip=6    'yy  ' 6  in MOLDEN 
+!     itip=7    'zz  ' 7  in MOLDEN 
+!     itip=8    'xy  ' 8  in MOLDEN 
+!     itip=9    'xz  ' 9  in MOLDEN 
+!     itip=10   'yz  ' 10 in MOLDEN 
+!     itip=11   'xxx ' 11 in MOLDEN 
+!     itip=12   'yyy ' 12 in MOLDEN 
+!     itip=13   'zzz ' 13 in MOLDEN 
+!     itip=14   'xxy ' 15 in MOLDEN 
+!     itip=15   'xxz ' 16 in MOLDEN 
+!     itip=16   'yyz ' 19 in MOLDEN 
+!     itip=17   'xyy ' 14 in MOLDEN 
+!     itip=18   'xzz ' 17 in MOLDEN 
+!     itip=19   'yzz ' 18 in MOLDEN 
+!     itip=20   'xyz ' 20 in MOLDEN 
+!     itip=21   'xxxx' 21 in MOLDEN 
+!     itip=22   'yyyy' 22 in MOLDEN 
+!     itip=23   'zzzz' 23 in MOLDEN 
+!     itip=24   'xxxy' 24 in MOLDEN 
+!     itip=25   'xxxz' 25 in MOLDEN 
+!     itip=26   'xyyy' 26 in MOLDEN 
+!     itip=27   'yyyz' 27 in MOLDEN 
+!     itip=28   'xzzz' 28 in MOLDEN 
+!     itip=29   'yzzz' 29 in MOLDEN 
+!     itip=30   'xxyy' 30 in MOLDEN 
+!     itip=31   'xxzz' 31 in MOLDEN 
+!     itip=32   'yyzz' 32 in MOLDEN 
+!     itip=33   'xxyz' 33 in MOLDEN 
+!     itip=34   'xyyz' 34 in MOLDEN 
+!     itip=35   'xyzz' 35 in MOLDEN 
+!
+!.....Labelling of Cartesian GTOs according to MOLDEN.
+!
+!     itip=1    's   ' 1  in PROMOLDEN   
+!     itip=2    'x   ' 2  in PROMOLDEN   
+!     itip=3    'y   ' 3  in PROMOLDEN   
+!     itip=4    'z   ' 4  in PROMOLDEN   
+!     itip=5    'xx  ' 5  in PROMOLDEN  
+!     itip=6    'yy  ' 6  in PROMOLDEN  
+!     itip=7    'zz  ' 7  in PROMOLDEN  
+!     itip=8    'xy  ' 8  in PROMOLDEN  
+!     itip=9    'xz  ' 9  in PROMOLDEN  
+!     itip=10   'yz  ' 10 in PROMOLDEN 
+!     itip=11   'xxx ' 11 in PROMOLDEN   
+!     itip=12   'yyy ' 12 in PROMOLDEN   
+!     itip=13   'zzz ' 13 in PROMOLDEN   
+!     itip=14   'xyy ' 17 in PROMOLDEN   
+!     itip=15   'xxy ' 14 in PROMOLDEN   
+!     itip=16   'xxz ' 15 in PROMOLDEN   
+!     itip=17   'xzz ' 18 in PROMOLDEN   
+!     itip=18   'yzz ' 19 in PROMOLDEN   
+!     itip=19   'yyz ' 16 in PROMOLDEN   
+!     itip=20   'xyz ' 20 in PROMOLDEN 
+!     itip=21   'xxxx' 21 in PROMOLDEN
+!     itip=22   'yyyy' 22 in PROMOLDEN 
+!     itip=23   'zzzz' 23 in PROMOLDEN 
+!     itip=24   'xxxy' 24 in PROMOLDEN 
+!     itip=25   'xxxz' 25 in PROMOLDEN 
+!     itip=26   'yyyx' 26 in PROMOLDEN 
+!     itip=27   'yyyz' 27 in PROMOLDEN 
+!     itip=28   'zzzx' 28 in PROMOLDEN 
+!     itip=29   'zzzy' 29 in PROMOLDEN
+!     itip=30   'xxyy' 30 in PROMOLDEN 
+!     itip=31   'xxzz' 31 in PROMOLDEN 
+!     itip=32   'yyzz' 32 in PROMOLDEN 
+!     itip=33   'xxyz' 33 in PROMOLDEN 
+!     itip=34   'yyxz' 34 in PROMOLDEN 
+!     itip=35   'zzxy' 35 in PROMOLDEN
+ 

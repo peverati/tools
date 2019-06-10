@@ -1,0 +1,6 @@
+verbose
+load h2o.wfn
+surface
+  epsiscp 0.220
+  lebedev 5810
+endsurface

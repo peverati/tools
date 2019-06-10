@@ -1,0 +1,6 @@
+t2
+load h2o_h2o.pmdout
+group
+  ga 1 2 3
+  gb 4 5 6
+endgroup

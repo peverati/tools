@@ -1,0 +1,7 @@
+*.o
+*.mod
+*.a
+*.txt
+connect
+tmp/
+gmon.out

@@ -1,0 +1,10 @@
+load h4_1.2_ag.wfn--001--002
+plane
+  points -3.0 -3.0 0.0  -3.0 3.0 0.0  3.0 -3.0 0.0 
+  scale 1.0 1.0
+  extendx 0.0 0.0
+  extendy 0.0 0.0
+  npoints 101 101
+  coords 1 2
+  range 0.01 0.01
+endplane

@@ -1,0 +1,4 @@
+*.o
+evalwfn
+tmp/
+*.mod

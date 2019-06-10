@@ -1,0 +1,3 @@
+plot
+  load h2o.wfn.surf0001
+endplot

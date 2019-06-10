@@ -1,0 +1,30 @@
+#! /usr/bin/make
+
+include make.inc
+
+all: surf
+exe = surf
+obj = mod_prec.o mod_io.o mod_memory.o mod_param.o mod_linalg.o \
+      mod_quad.o lebgrid.o mod_wfn.o mod_fields.o mod_surf.o \
+      surf.o
+
+.SUFFIXES: .o .f90
+
+%.o: %.f90
+	$(FCOMPL) -c $(FFLAGC) $(OPT) $(FDEBUG) -o $@ $<
+
+%.o: %.f
+	$(FCOMPL) -c $(FFLAGC) $(OPT) $(FDEBUG) -o $@ $<
+
+%.o: %.F90
+	$(FCOMPL) -c $(FFLAGC) $(OPT) $(FDEBUG) -o $@ $<
+
+surf: $(obj)
+	$(FCOMPL) $(LDFLAG) -o $(exe) $(obj)
+
+clean:
+	@rm -f $(obj) *.mod $(exe)
+
+.PHONY: all surf clean
+
+# DEPS

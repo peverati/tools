@@ -1,0 +1,235 @@
+#INFO: **** input file is /home/jluis/src/git/future/integ/test/h2o.py ****
+#!/usr/bin/env python
+
+import avas, numpy
+from pyscf import gto, scf, mcscf, fci, ao2mo, lib
+from pyscf.tools import wfn_format
+
+name = 'h2o'
+
+mol = gto.Mole()
+mol.atom = '''
+ O  0.0000  0.0000  0.1173
+ H  0.0000  0.7572 -0.4692
+ H  0.0000 -0.7572 -0.4692
+'''
+mol.basis = 'cc-pvtz'
+mol.verbose = 4
+mol.spin = 0
+mol.symmetry = 1
+mol.charge = 0
+mol.build()
+
+mf = scf.RHF(mol)
+mf.chkfile = name+'.chk'
+#mf.__dict__.update(scf.chkfile.load(name+'.chk', 'scf'))
+#dm = mf.make_rdm1()
+mf.kernel()
+
+ncore = 1
+aolst1 = ['O 2s', 'O 2p']
+aolst = aolst1 
+ncas, nelecas, mo = avas.kernel(mf, aolst, threshold_occ=0.1, threshold_vir=0.01, minao='minao', ncore=ncore)
+
+mc = mcscf.CASSCF(mf, ncas, nelecas)
+mc.max_cycle_macro = 250
+mc.max_cycle_micro = 7
+mc.chkfile = name+'.chk'
+mc.fcisolver = fci.direct_spin0_symm.FCI(mol)
+mc.fix_spin_(shift=.5, ss=0)
+#mc.__dict__.update(scf.chkfile.load(name+'.chk', 'mcscf'))
+#mo = lib.chkfile.load(name+'.chk', 'mcscf/mo_coeff')
+mc.kernel(mo)
+
+nmo = mc.ncore + mc.ncas
+rdm1, rdm2 = mc.fcisolver.make_rdm12(mc.ci, mc.ncas, mc.nelecas) 
+rdm1, rdm2 = mcscf.addons._make_rdm12_on_mo(rdm1, rdm2, mc.ncore, mc.ncas, nmo)
+
+eri_mo = ao2mo.kernel(mf._eri, mc.mo_coeff[:,:nmo], compact=False)
+eri_mo = eri_mo.reshape(nmo,nmo,nmo,nmo)
+h1 = reduce(numpy.dot, (mc.mo_coeff[:,:nmo].T, mf.get_hcore(), \
+                        mc.mo_coeff[:,:nmo]))
+e1 = numpy.einsum('ij,ij->', h1, rdm1)
+lib.logger.info(mc,"h1e energy : %.8f" % e1)    
+e2 = numpy.einsum('ijkl,ijkl->', eri_mo, rdm2)*0.5 
+lib.logger.info(mc,"h2e energy : %.8f" % e2)    
+enuc = mf.mol.energy_nuc()  
+lib.logger.info(mc,"NN energy : %.8f" % enuc)    
+etot = e1 + e2 + enuc
+lib.logger.info(mc,"* Energy with 1/2-RDM : %.8f" % etot)    
+
+wfn_file = name + '.wfn'
+coef = mc.mo_coeff[:,:nmo]
+occ = mf.mo_occ[:nmo]
+ene = mf.mo_energy[:nmo]
+with open(wfn_file, 'w') as f2:
+    wfn_format.write_mo(f2, mol, coef, mo_occ=occ, mo_energy=ene)
+    f2.write('CCIQA\n')
+    f2.write('1-RDM:\n')
+    for i in range(nmo):
+        for j in range(nmo):
+            f2.write('%i %i %.10f\n' % ((i+1), (j+1), rdm1[i,j]))
+    f2.write('2-RDM:\n')
+    for i in range(nmo):
+        for j in range(nmo):
+            for k in range(nmo):
+                for l in range(nmo):
+                    if (abs(rdm2[i,j,k,l]) > 1e-10):
+                        f2.write('%i %i %i %i %.10f\n' % ((i+1), \
+                        (j+1), (k+1), (l+1), rdm2[i,j,k,l]))
+
+#INFO: ******************** input file end ********************
+
+
+System: ('Linux', 'cromo', '4.9.0-0.bpo.3-amd64', '#1 SMP Debian 4.9.30-2+deb9u5~bpo8+1 (2017-09-28)', 'x86_64', '')  Threads 4
+Python 2.7.14 (default, Apr 10 2018, 19:21:27) 
+[GCC 7.3.0]
+numpy 1.15.4  scipy 1.2.0
+Date: Mon Apr 22 03:27:07 2019
+PySCF version 1.6.1
+PySCF path  /home/jluis/src/pyscf/dev/pyscf
+GIT ORIG_HEAD ed0669f78f5636a4bf8e5ecd86890f038b3da45c
+GIT HEAD      ref: refs/heads/dev
+GIT dev branch  470abb0313323f02e64068f615438a6b8abe876d
+
+[ENV] PYSCF_MAX_MEMORY 24000
+[ENV] PYSCF_TMPDIR /scratch-ssd/jluis
+[CONFIG] conf_file None
+[INPUT] verbose = 4
+[INPUT] num. atoms = 3
+[INPUT] num. electrons = 10
+[INPUT] charge = 0
+[INPUT] spin (= nelec alpha-beta = 2S) = 0
+[INPUT] symmetry 1 subgroup None
+[INPUT] Mole.unit = angstrom
+[INPUT]  1 O      0.000000000000   0.000000000000   0.117300000000 AA    0.000000000000   0.000000000000   0.221664874411 Bohr
+[INPUT]  2 H      0.757200000000   0.000000000000  -0.469200000000 AA    1.430900621521   0.000000000000  -0.886659497646 Bohr
+[INPUT]  3 H     -0.757200000000   0.000000000000  -0.469200000000 AA   -1.430900621521   0.000000000000  -0.886659497646 Bohr
+
+nuclear repulsion = 9.1895337629349
+point group symmetry = C2v
+num. orbitals of irrep A1 = 23
+num. orbitals of irrep A2 = 7
+num. orbitals of irrep B1 = 17
+num. orbitals of irrep B2 = 11
+number of shells = 21
+number of NR pGTOs = 74
+number of NR cGTOs = 58
+basis = cc-pvtz
+ecp = {}
+CPU time:         0.39
+
+
+******** <class 'pyscf.scf.hf_symm.SymAdaptedRHF'> ********
+method = SymAdaptedRHF-RHF
+initial guess = minao
+damping factor = 0
+level shift factor = 0
+DIIS = <class 'pyscf.scf.diis.CDIIS'>
+DIIS start cycle = 1
+DIIS space = 8
+SCF tol = 1e-09
+SCF gradient tol = None
+max. SCF cycles = 50
+direct_scf = True
+direct_scf_tol = 1e-13
+chkfile to save SCF result = h2o.chk
+max_memory 24000 MB (current use 75 MB)
+Freeze 0 electrons in irreps []
+    10 free electrons in irreps A1 A2 B1 B2
+Set gradient conv threshold to 3.16228e-05
+init E= -75.8790280748142
+HOMO (B2) = -0.47850150694098  LUMO (A1) = 0.0772300349993201
+cycle= 1 E= -76.0205154712382  delta_E= -0.141  |g|= 0.443  |ddm|=    1
+HOMO (B2) = -0.42871941419767  LUMO (A1) = 0.141396274694536
+cycle= 2 E= -76.0473554859622  delta_E= -0.0268  |g|= 0.253  |ddm|= 0.313
+HOMO (B2) = -0.513065450956783  LUMO (A1) = 0.138308355707253
+cycle= 3 E= -76.0569051324048  delta_E= -0.00955  |g|= 0.0319  |ddm|= 0.101
+HOMO (B2) = -0.503363203746427  LUMO (A1) = 0.142168699975385
+cycle= 4 E= -76.0571115129165  delta_E= -0.000206  |g|= 0.00587  |ddm|= 0.0194
+HOMO (B2) = -0.504148132895278  LUMO (A1) = 0.142258317658491
+cycle= 5 E= -76.0571267760026  delta_E= -1.53e-05  |g|= 0.00103  |ddm|= 0.00858
+HOMO (B2) = -0.504382550380007  LUMO (A1) = 0.142210178644511
+cycle= 6 E= -76.0571274010995  delta_E= -6.25e-07  |g|= 0.000178  |ddm|= 0.00144
+HOMO (B2) = -0.504442748881735  LUMO (A1) = 0.142204692194183
+cycle= 7 E= -76.0571274200129  delta_E= -1.89e-08  |g|= 2.46e-05  |ddm|= 0.000258
+HOMO (B2) = -0.50444203078969  LUMO (A1) = 0.142205107196601
+cycle= 8 E= -76.0571274202711  delta_E= -2.58e-10  |g|= 2.19e-06  |ddm|= 3.74e-05
+HOMO (B2) = -0.504441473900803  LUMO (A1) = 0.142205241464668
+Extra cycle  E= -76.0571274202738  delta_E= -2.76e-12  |g|= 8.8e-07  |ddm|= 3.75e-06
+converged SCF energy = -76.0571274202738
+
+** AVAS **
+  Total number of HF MOs  is equal to    58
+  Number of occupied HF MOs is equal to  5
+  Number of core HF MOs is equal to  1
+reference AO indices for minao ['O 2s', 'O 2p']: [1 2 3 4]
+Option 2: threshold_occ 0.1
+Option 2: threshold_vir 0.01
+Active from occupied = 4 , eig [0.99691597 0.99186628 0.93256752 0.88601959]
+Inactive from occupied = 0
+Active from unoccupied = 2 , eig [0.11398041 0.06743132]
+Inactive from unoccupied = 51
+Dimensions of active 6
+# of alpha electrons 4
+# of beta electrons 4
+
+******** <class 'pyscf.mcscf.mc1step_symm.SymAdaptedCASSCF'> ********
+CAS (4e+4e, 6o), ncore = 1, nvir = 51
+max_cycle_macro = 250
+max_cycle_micro = 7
+conv_tol = 1e-07
+conv_tol_grad = None
+orbital rotation max_stepsize = 0.02
+augmented hessian ah_max_cycle = 30
+augmented hessian ah_conv_tol = 1e-12
+augmented hessian ah_linear dependence = 1e-14
+augmented hessian ah_level shift = 0
+augmented hessian ah_start_tol = 2.5
+augmented hessian ah_start_cycle = 3
+augmented hessian ah_grad_trust_region = 3
+kf_trust_region = 3
+kf_interval = 4
+ci_response_space = 4
+ci_grad_trust_region = 3
+with_dep4 0
+natorb = False
+canonicalization = True
+sorting_mo_energy = False
+ao2mo_level = 2
+chkfile = h2o.chk
+max_memory 24000 MB (current use 95 MB)
+internal_rotation = False
+******** <class 'pyscf.fci.direct_spin0_symm.FCISolver'> ********
+max. cycles = 100
+conv_tol = 1e-10
+davidson only = True
+linear dependence = 1e-14
+level shift = 0.001
+max iter space = 12
+max_memory 24000 MB
+nroots = 1
+pspace_size = 0
+spin = None
+Active space CI wfn symmetry = A1
+CASCI E = -76.0972612078009  S^2 = 0.0000000
+Set conv_tol_grad to 0.000316228
+macro iter 1 (29 JK  7 micro), CASSCF E = -76.1102926297824  dE = -0.013031422  S^2 = 0.0000000
+               |grad[o]|=0.0549  |grad[c]|= 0.014487219003982343  |ddm|=0.0108
+macro iter 2 (9 JK  3 micro), CASSCF E = -76.1104317594483  dE = -0.00013912967  S^2 = 0.0000000
+               |grad[o]|=0.00838  |grad[c]|= 0.002871404526869561  |ddm|=0.000824
+macro iter 3 (16 JK  6 micro), CASSCF E = -76.1104334046077  dE = -1.6451594e-06  S^2 = 0.0000000
+               |grad[o]|=0.000778  |grad[c]|= 0.0006379189522627569  |ddm|=0.000214
+macro iter 4 (3 JK  1 micro), CASSCF E = -76.1104358902439  dE = -2.4856362e-06  S^2 = 0.0000000
+               |grad[o]|=0.000554  |grad[c]|= 0.0007422296546496111  |ddm|=0.000128
+macro iter 5 (3 JK  1 micro), CASSCF E = -76.1104359337524  dE = -4.3508479e-08  S^2 = 0.0000000
+               |grad[o]|=0.000146  |grad[c]|= 0.00014509800063285114  |ddm|=5.39e-05
+1-step CASSCF converged in 5 macro (60 JK 18 micro) steps
+CASSCF canonicalization
+Density matrix diagonal elements [1.99272436 1.97788969 1.98540732 1.99952388 0.02252382 0.02193093]
+CASSCF energy = -76.1104359337524
+CASCI E = -76.1104359337524  E(CI) = -24.2238054130103  S^2 = 0.0000000
+h1e energy : -123.06616329
+h2e energy : 37.76619360
+NN energy : 9.18953376
+* Energy with 1/2-RDM : -76.11043593

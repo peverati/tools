@@ -1,0 +1,112 @@
+#INFO: **** input file is /home/jluis/src/git/surf/test/h2o.py ****
+#!/usr/bin/env python
+
+from pyscf import gto, scf
+from pyscf.tools import wfn_format
+
+name = 'h2o'
+
+mol = gto.Mole()
+mol.atom = '''
+ O  0.0000  0.0000  0.1173
+ H  0.0000  0.7572 -0.4692
+ H  0.0000 -0.7572 -0.4692
+'''
+mol.basis = 'cc-pvdz'
+mol.verbose = 4
+mol.spin = 0
+mol.symmetry = 1
+mol.charge = 0
+mol.build()
+
+mf = scf.RHF(mol)
+mf.kernel()
+
+wfn_file = name + '.wfn'
+nmo = mol.nelectron//2
+coef = mf.mo_coeff[:,:nmo]
+occ = mf.mo_occ[:nmo]
+ene = mf.mo_energy[:nmo]
+with open(wfn_file, 'w') as f2:
+    wfn_format.write_mo(f2, mol, coef, mo_occ=occ, mo_energy=ene)
+
+#INFO: ******************** input file end ********************
+
+
+System: ('Linux', 'cromo', '4.9.0-0.bpo.3-amd64', '#1 SMP Debian 4.9.30-2+deb9u5~bpo8+1 (2017-09-28)', 'x86_64', '')  Threads 4
+Python 2.7.14 (default, Apr 10 2018, 19:21:27) 
+[GCC 7.3.0]
+numpy 1.15.4  scipy 1.2.0
+Date: Mon Apr 22 17:44:26 2019
+PySCF version 1.6.1
+PySCF path  /home/jluis/src/pyscf/dev/pyscf
+GIT ORIG_HEAD ed0669f78f5636a4bf8e5ecd86890f038b3da45c
+GIT HEAD      ref: refs/heads/dev
+GIT dev branch  470abb0313323f02e64068f615438a6b8abe876d
+
+[ENV] PYSCF_MAX_MEMORY 24000
+[ENV] PYSCF_TMPDIR /scratch-ssd/jluis
+[CONFIG] conf_file None
+[INPUT] verbose = 4
+[INPUT] num. atoms = 3
+[INPUT] num. electrons = 10
+[INPUT] charge = 0
+[INPUT] spin (= nelec alpha-beta = 2S) = 0
+[INPUT] symmetry 1 subgroup None
+[INPUT] Mole.unit = angstrom
+[INPUT]  1 O      0.000000000000   0.000000000000   0.117300000000 AA    0.000000000000   0.000000000000   0.221664874411 Bohr
+[INPUT]  2 H      0.757200000000   0.000000000000  -0.469200000000 AA    1.430900621521   0.000000000000  -0.886659497646 Bohr
+[INPUT]  3 H     -0.757200000000   0.000000000000  -0.469200000000 AA   -1.430900621521   0.000000000000  -0.886659497646 Bohr
+
+nuclear repulsion = 9.1895337629349
+point group symmetry = C2v
+num. orbitals of irrep A1 = 11
+num. orbitals of irrep A2 = 2
+num. orbitals of irrep B1 = 7
+num. orbitals of irrep B2 = 4
+number of shells = 11
+number of NR pGTOs = 40
+number of NR cGTOs = 24
+basis = cc-pvdz
+ecp = {}
+CPU time:         0.33
+
+
+******** <class 'pyscf.scf.hf_symm.SymAdaptedRHF'> ********
+method = SymAdaptedRHF-RHF
+initial guess = minao
+damping factor = 0
+level shift factor = 0
+DIIS = <class 'pyscf.scf.diis.CDIIS'>
+DIIS start cycle = 1
+DIIS space = 8
+SCF tol = 1e-09
+SCF gradient tol = None
+max. SCF cycles = 50
+direct_scf = True
+direct_scf_tol = 1e-13
+chkfile to save SCF result = /scratch-ssd/jluis/tmpAv8gs8
+max_memory 24000 MB (current use 74 MB)
+Freeze 0 electrons in irreps []
+    10 free electrons in irreps A1 A2 B1 B2
+Set gradient conv threshold to 3.16228e-05
+init E= -75.8567431412762
+HOMO (B2) = -0.476859070453273  LUMO (A1) = 0.100659084484048
+cycle= 1 E= -75.9878389806268  delta_E= -0.131  |g|= 0.448  |ddm|= 1.31
+HOMO (B2) = -0.412649846538037  LUMO (A1) = 0.186541200154333
+cycle= 2 E= -76.0177273296637  delta_E= -0.0299  |g|= 0.228  |ddm|= 0.37
+HOMO (B2) = -0.500108684558799  LUMO (A1) = 0.180737379159856
+cycle= 3 E= -76.02656293894  delta_E= -0.00884  |g|= 0.0275  |ddm|= 0.133
+HOMO (B2) = -0.491445938568531  LUMO (A1) = 0.185458855866626
+cycle= 4 E= -76.0267558358127  delta_E= -0.000193  |g|= 0.00607  |ddm|= 0.0186
+HOMO (B2) = -0.49283115205948  LUMO (A1) = 0.185568041989948
+cycle= 5 E= -76.026771692677  delta_E= -1.59e-05  |g|= 0.000817  |ddm|= 0.00726
+HOMO (B2) = -0.493085164030626  LUMO (A1) = 0.185475754040587
+cycle= 6 E= -76.0267720421829  delta_E= -3.5e-07  |g|= 0.000142  |ddm|= 0.00121
+HOMO (B2) = -0.493124303321478  LUMO (A1) = 0.185474927921132
+cycle= 7 E= -76.0267720532763  delta_E= -1.11e-08  |g|= 1.36e-05  |ddm|= 0.000254
+HOMO (B2) = -0.493121399935027  LUMO (A1) = 0.185474279579511
+cycle= 8 E= -76.0267720533846  delta_E= -1.08e-10  |g|= 3.4e-06  |ddm|= 2.35e-05
+HOMO (B2) = -0.493121130982997  LUMO (A1) = 0.185474204136355
+Extra cycle  E= -76.0267720533922  delta_E= -7.53e-12  |g|= 1.56e-06  |ddm|= 5.13e-06
+converged SCF energy = -76.0267720533922
